@@ -149,21 +149,25 @@ if st.button("🔍 Cek Tingkat Risiko Saya", type="primary", use_container_width
     st.info(RISK_DESC.get(pred, ""))
 
     st.write("**Probabilitas tiap kategori:**")
+
+    # Kotak angka persen
     cols = st.columns(len(classes))
-for c, k, p in zip(cols, classes, proba):
-    c.metric(k, f"{p*100:.1f}%")
-    proba_df = pd.DataFrame({"Kategori": classes, "Probabilitas": proba}).sort_values("Probabilitas", ascending=False)
-chart = alt.Chart(proba_df).mark_bar().encode(
-    x=alt.X("Kategori", sort=["Ringan", "Sedang", "Berat"], axis=alt.Axis(labelAngle=0)),
-    y=alt.Y("Probabilitas", scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
-    color=alt.Color(
-        "Kategori",
-        scale=alt.Scale(domain=list(RISK_COLORS.keys()), range=list(RISK_COLORS.values())),
-        legend=None,
-    ),
-    tooltip=[alt.Tooltip("Kategori"), alt.Tooltip("Probabilitas", format=".1%")],
-)
-st.altair_chart(chart, use_container_width=True)
+    for c, k, p in zip(cols, classes, proba):
+        c.metric(k, f"{p*100:.1f}%")
+
+    # Grafik batang (sumbu Y dikunci 0-100%, urutan batang tetap)
+    proba_df = pd.DataFrame({"Kategori": classes, "Probabilitas": proba})
+    chart = alt.Chart(proba_df).mark_bar().encode(
+        x=alt.X("Kategori", sort=["Ringan", "Sedang", "Berat"], axis=alt.Axis(labelAngle=0)),
+        y=alt.Y("Probabilitas", scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
+        color=alt.Color(
+            "Kategori",
+            scale=alt.Scale(domain=list(RISK_COLORS.keys()), range=list(RISK_COLORS.values())),
+            legend=None,
+        ),
+        tooltip=[alt.Tooltip("Kategori"), alt.Tooltip("Probabilitas", format=".1%")],
+    )
+    st.altair_chart(chart, use_container_width=True)
 
 st.divider()
 
