@@ -6,6 +6,7 @@ Tahap 9 - Perancangan dan Implementasi Dashboard
 Jalankan dengan: streamlit run app.py
 """
 
+import altair as alt
 import streamlit as st
 import joblib
 import numpy as np
@@ -148,8 +149,21 @@ if st.button("🔍 Cek Tingkat Risiko Saya", type="primary", use_container_width
     st.info(RISK_DESC.get(pred, ""))
 
     st.write("**Probabilitas tiap kategori:**")
+    cols = st.columns(len(classes))
+for c, k, p in zip(cols, classes, proba):
+    c.metric(k, f"{p*100:.1f}%")
     proba_df = pd.DataFrame({"Kategori": classes, "Probabilitas": proba}).sort_values("Probabilitas", ascending=False)
-    st.bar_chart(proba_df.set_index("Kategori"))
+chart = alt.Chart(proba_df).mark_bar().encode(
+    x=alt.X("Kategori", sort=["Ringan", "Sedang", "Berat"], axis=alt.Axis(labelAngle=0)),
+    y=alt.Y("Probabilitas", scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
+    color=alt.Color(
+        "Kategori",
+        scale=alt.Scale(domain=list(RISK_COLORS.keys()), range=list(RISK_COLORS.values())),
+        legend=None,
+    ),
+    tooltip=[alt.Tooltip("Kategori"), alt.Tooltip("Probabilitas", format=".1%")],
+)
+st.altair_chart(chart, use_container_width=True)
 
 st.divider()
 
