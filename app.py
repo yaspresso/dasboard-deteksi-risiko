@@ -84,12 +84,12 @@ RISK_DESC = {
 }
 
 FEATURE_IMPORTANCE = {
-    "Durasi penggunaan": 0.217,
-    "Buka saat mengerjakan tugas": 0.176,
-    "Frekuensi membuka": 0.145,
-    "Menunda tidur": 0.136,
-    "Sulit berhenti scrolling": 0.125,
-    "Buka otomatis/tanpa sadar": 0.053,
+    "Durasi penggunaan": 0.226,
+    "Buka saat mengerjakan tugas": 0.224,
+    "Menunda tidur": 0.150,
+    "Frekuensi membuka": 0.130,
+    "Sulit berhenti scrolling": 0.126,
+    "Buka otomatis/tanpa sadar": 0.076,
 }
 
 st.divider()
